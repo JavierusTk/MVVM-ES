@@ -20,7 +20,7 @@ PrintToFile=0
 PrintBorders=1
 PrintSelected=0
 PrintVisible=0
-ExpandedItems=dmInforme_ViewModel
+ExpandedItems=
 
 [DataDiagrams]
 Version=1

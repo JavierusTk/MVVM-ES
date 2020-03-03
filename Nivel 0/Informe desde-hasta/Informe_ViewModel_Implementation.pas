@@ -3,12 +3,11 @@ unit Informe_ViewModel_Implementation;
 interface
 
 uses
-  Windows, Variants, Messages, SysUtils, Classes, Db, Forms,
-  ppBands, ppCache, ppClass, ppProd, ppReport, ppReportMax, ppComm, ppRelatv, ppDB, ppDBPipe, ppDBBDE,
-  kbmMemTable, TableMax, DBTables, Informe_ViewModel;
+  Classes,
+  Informe_Model, Informe_ViewModel;
 
 type
-  TdmInforme_ViewModel = class(TDataModule)
+  TInforme_ViewModel = class
   private
     fDesdeFecha,
     fHastaFecha: TDateTime;
@@ -16,6 +15,8 @@ type
     fPropiedadesCambiadas: boolean;
     fCambioPropiedadesDisabled: integer;
     fNombrePlantilla: string;
+    fModel: TdmInforme_Model;
+    fTickInforme: TNotifyEvent;
     procedure SetDesdeFecha(const Value: TDateTime);
     procedure SetHastaFecha(const Value: TDateTime);
     procedure CambioPropiedades;
@@ -26,15 +27,21 @@ type
     function  GetHastaFecha: TDateTime;
     function  GetOnCambioPropiedades: TNotifyEvent;
     procedure SetOnCambioPropiedades(const Value: TNotifyEvent);
-    procedure PrepararDatos(const TickInforme:TNotifyEvent);
+    function GetTickInforme: TNotifyEvent;
+    procedure SetTickInforme(const Value: TNotifyEvent);
+    function GetNombrePlantilla: string;
+    procedure SetNombrePlantilla(const Value: string);
   public
     procedure Iniciar(const aOnCambiosEnViewModel:TNotifyEvent;const aDesde,aHasta:TDateTime;const aNombrePlantilla:string);
     procedure Actualizar(const aDesdeFecha,aHastaFecha:TDateTime);
-    procedure EmitirInforme(const TickInforme:TNotifyEvent);
+    procedure EmitirInforme;
     property  DesdeFecha:TDateTime read GetDesdeFecha write SetDesdeFecha;
     property  HastaFecha:TDateTime read GetHastaFecha write SetHastaFecha;
     property  OnCambioPropiedades:TNotifyEvent read GetOnCambioPropiedades write SetOnCambioPropiedades;
     property  EmitirInformeOK:boolean read GetEmitirInformeOK;
+    property  TickInforme:TNotifyEvent read GetTickInforme write SetTickInforme;
+    property  NombrePlantilla:string read GetNombrePlantilla write SetNombrePlantilla;
+    constructor Create;
     destructor Destroy; override;
   end;
 
@@ -43,41 +50,32 @@ type
 implementation
 
 uses
-  DialogsMax,
-  CompatVarios, TypesMax, UtilFechas, EsperePorFavor, FormMax;
-
-{$R *.DFM}
+  Forms;
 
 
-procedure TdmInforme_ViewModel.Iniciar(const aOnCambiosEnViewModel:TNotifyEvent;const aDesde,aHasta:TDateTime;const aNombrePlantilla:string);
+
+procedure TInforme_ViewModel.Iniciar(const aOnCambiosEnViewModel:TNotifyEvent;const aDesde,aHasta:TDateTime;const aNombrePlantilla:string);
 begin
-  if (aDesde=0) or (aHasta=0) then begin
-    fDesdeFecha:=MinDaysOnDateMonth(SumaMeses(Date,-1));
-    fHastaFecha:=MaxDaysOnDateMonth(fDesdeFecha);
-   end
-  else begin
-    fDesdeFecha:=aDesde;
-    fHastaFecha:=aHasta;
-  end;                                                                 
-  fNombrePlantilla:=aNombrePlantilla;
   fOnCambioPropiedades:=aOnCambiosEnViewModel;
+  CambiarPropiedadesDisable;
+  try
+    DesdeFecha:=aDesde;
+    HastaFecha:=aHasta;
+    NombrePlantilla:=aNombrePlantilla;
+  finally
+    CambiarPropiedadesEnable;
+  end;
 end;
 
-procedure TdmInforme_ViewModel.PrepararDatos(const TickInforme:TNotifyEvent);
+
+procedure TInforme_ViewModel.EmitirInforme;
 begin
-//....
-end;
-
-
-procedure TdmInforme_ViewModel.EmitirInforme(const TickInforme:TNotifyEvent);
-begin
-    PrepararDatos(TickInforme);
-//    TExportarExcel.....
+  fModel.EmitirInforme;
 end;
 
 
 
-procedure TdmInforme_ViewModel.Actualizar(const aDesdeFecha,aHastaFecha:TDateTime);
+procedure TInforme_ViewModel.Actualizar(const aDesdeFecha,aHastaFecha:TDateTime);
 begin
   if (DesdeFecha<>aDesdeFecha) or (HastaFecha<>aHastaFecha) then begin
     fDesdeFecha:=aDesdeFecha;
@@ -86,7 +84,7 @@ begin
   end;
 end;
 
-procedure TdmInforme_ViewModel.SetDesdeFecha(const Value: TDateTime);
+procedure TInforme_ViewModel.SetDesdeFecha(const Value: TDateTime);
 begin
   if FDesdeFecha<>Value then begin
     FDesdeFecha := Value;
@@ -94,7 +92,7 @@ begin
   end;
 end;
 
-procedure TdmInforme_ViewModel.SetHastaFecha(const Value: TDateTime);
+procedure TInforme_ViewModel.SetHastaFecha(const Value: TDateTime);
 begin
   if FHastaFecha<>Value then begin
     FHastaFecha := Value;
@@ -102,19 +100,19 @@ begin
   end;
 end;
 
-procedure TdmInforme_ViewModel.CambiarPropiedadesDisable;
+procedure TInforme_ViewModel.CambiarPropiedadesDisable;
 begin
   inc(fCambioPropiedadesDisabled);
 end;
 
-procedure TdmInforme_ViewModel.CambiarPropiedadesEnable;
+procedure TInforme_ViewModel.CambiarPropiedadesEnable;
 begin
   dec(fCambioPropiedadesDisabled);
   if (fCambioPropiedadesDisabled=0) and fPropiedadesCambiadas then
     CambioPropiedades;
 end;
 
-procedure TdmInforme_ViewModel.CambioPropiedades;
+procedure TInforme_ViewModel.CambioPropiedades;
 begin
   if (fCambioPropiedadesDisabled<>0) then
     fPropiedadesCambiadas:=True
@@ -130,34 +128,68 @@ begin
   end;
 end;
 
-function TdmInforme_ViewModel.GetEmitirInformeOK: boolean;
+function TInforme_ViewModel.GetEmitirInformeOK: boolean;
 begin
   result:=(DesdeFecha<>0) and (DesdeFecha<=HastaFecha);
 end;
 
-function TdmInforme_ViewModel.GetDesdeFecha: TDateTime;
+function TInforme_ViewModel.GetDesdeFecha: TDateTime;
 begin
   result:=fDesdeFecha;
 end;
 
-function TdmInforme_ViewModel.GetHastaFecha: TDateTime;
+function TInforme_ViewModel.GetHastaFecha: TDateTime;
 begin
   result:=fHastaFecha;
 end;
 
-function TdmInforme_ViewModel.GetOnCambioPropiedades: TNotifyEvent;
+function TInforme_ViewModel.GetOnCambioPropiedades: TNotifyEvent;
 begin
   result:=fOnCambioPropiedades;
 end;
 
-procedure TdmInforme_ViewModel.SetOnCambioPropiedades(const Value: TNotifyEvent);
+procedure TInforme_ViewModel.SetOnCambioPropiedades(const Value: TNotifyEvent);
 begin
   fOnCambioPropiedades:=Value;
 end;
 
-destructor TdmInforme_ViewModel.Destroy;
+destructor TInforme_ViewModel.Destroy;
 begin
+  fModel.Free;
+  fModel:=nil;
   inherited;
+end;
+
+constructor TInforme_ViewModel.Create;
+begin
+  inherited Create;
+  Application.CreateForm(TdmInforme_Model,fModel);
+end;
+
+function TInforme_ViewModel.GetTickInforme: TNotifyEvent;
+begin
+  result:=fTickInforme;
+end;
+
+procedure TInforme_ViewModel.SetTickInforme(const Value: TNotifyEvent);
+begin
+  if @FTickInforme<>@Value then begin
+    FTickInforme:=Value;
+    CambioPropiedades;
+  end;
+end;
+
+function TInforme_ViewModel.GetNombrePlantilla: string;
+begin
+  result:=FNombrePlantilla;
+end;
+
+procedure TInforme_ViewModel.SetNombrePlantilla(const Value: string);
+begin
+  if FNombrePlantilla<>Value then begin
+    FNombrePlantilla:= Value;
+    CambioPropiedades;
+  end;
 end;
 
 end.

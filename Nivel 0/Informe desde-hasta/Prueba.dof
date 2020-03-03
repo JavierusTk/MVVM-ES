@@ -1,0 +1,106 @@
+[Compiler]
+A=1
+B=0
+C=1
+D=1
+E=0
+F=0
+G=1
+H=1
+I=1
+J=1
+K=0
+L=1
+M=0
+N=1
+O=1
+P=1
+Q=0
+R=0
+S=0
+T=0
+U=0
+V=1
+W=1
+X=1
+Y=1
+Z=1
+ShowHints=1
+ShowWarnings=1
+UnitAliases=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
+[Linker]
+MapFile=3
+OutputObjs=0
+ConsoleApp=1
+DebugInfo=0
+RemoteSymbols=0
+MinStackSize=16384
+MaxStackSize=1048576
+ImageBase=4194304
+ExeDescription=
+[Directories]
+OutputDir=
+UnitOutputDir=
+PackageDLLOutputDir=
+PackageDCPOutputDir=
+SearchPath=$(DELPHI)\Lib\Debug
+Packages=Vcl50;Vclx50;Vcldb50;Vclbde50;vcldbx50;vclado50;ibevnt50;Dss50;vclie50;Inetdb50;Inet50;webmid50;Vclmid50;VclSmp50;dclocx50;VCLIB50;Qrpt50;NMFast50;rbCIDE55;rbIDE55;rbRCL55;rbBDE55;rbUSER55;rbRIDE55;rbRAP55;rbTDBC51;rbDBDE55;rbDAD55;rbDIDE55;BaseMAX;Compatibilidad;FormMaxPkg;ccpack50;rbProMAX;CtrlsMax;CCPackage;EnhancedGUI;DbMAX;CCPackageDB;MetaDBmax;WordMerge;TeeUI50;TeeDB50;Tee50;rbCT55;rbDB55;rbTC51;SMExportD5;XFormat5;xtradev;dclaxserver50;edbrun228delphi5;SynEdit_R5;IndyCore50;IndySystem50;IndyProtocols50;DebenuPDF;StreamFilter
+Conditionals=
+DebugSourceDirs=
+UsePackages=0
+[Parameters]
+RunParams=/DEBUG /USUARIO:ADMIN
+HostApplication=
+[Version Info]
+IncludeVerInfo=1
+AutoIncBuild=0
+MajorVer=16
+MinorVer=0
+Release=22
+Build=1
+Debug=1
+PreRelease=1
+Special=0
+Private=0
+DLL=0
+Locale=3082
+CodePage=1252
+[Version Info Keys]
+CompanyName=CYBER Informática Avanzada, S.L.
+FileDescription=Aplicación CyberMAX TCConta
+FileVersion=16.0.22.1
+InternalName=CyberMAX TCConta
+LegalCopyright=(c) CYBER Informática Avanzada, S.L.
+LegalTrademarks=CyberMAX is a Trademark of Javier Tarí Agulló
+OriginalFilename=TCConta.Exe
+ProductName=CyberMAX TCConta
+ProductVersion=16.0
+Comments=Parte contable de la suite ERP CyberMAX
+[Excluded Packages]
+$(DELPHI)\Bin\DCLNMF50.bpl=NetMasters Fastnet Tools
+W:\BPL\SMExportD5.bpl=SMExport suite: data export from dataset. Written by Mike Shkolnik/Scalabium, 1998-2005.
+W:\BPL\SMImportD5.bpl=SMImport suite: data importing into dataset. Scalabium/Mike Shkolnik, 2000-2008
+W:\Bpl\tdbfd.bpl=TDbf for Delphi 5
+W:\Bpl\SynEdit_D5.bpl=SynEdit component suite
+W:\Bpl\OExport_Runtime.bpl=OExport - Native XLSX/ODS import/export Delphi Library
+$(DELPHI)\Bin\dclqrt50.bpl=QuickReport Components
+W:\BPL\WordMerge.bpl=MS Word Merge Components
+W:\BPL\dclRBE55.bpl=ReportBuilder Enterprise
+W:\BPL\dclRBU55.bpl=ReportBuilder Sample Components
+W:\BPL\dclRBC51.bpl=ReportBuilder TeeChart 4.0 Components
+W:\BPL\dclDAD55.bpl=ReportBuilder Data Access Environment
+W:\BPL\dclRAP55.bpl=ReportBuilder RAP Language
+W:\BPL\dclZipForged5.bpl=ZipForge Package
+W:\Bpl\VirtualTreesD5D.bpl=Virtual Treeview design time package
+$(DELPHI)\Bin\dcltqr50.bpl=TeeChart 5.0 for QuickReport Components Design Package
+W:\BPL\XFormat5.bpl=TExtraFormats
+W:\BPL\Scripting.bpl=Scripting
+W:\BPL\xtradev.bpl=TExtraDevices for ReportBuilder
+W:\BPL\MetaDBmax.bpl=MAX Meta Controles
+W:\Bpl\PDFiumP.bpl=Winsoft PDFium Component Suite
+W:\Bpl\rbProMAX.bpl=Report Builder MAX components
+W:\Bpl\MAXide.bpl=MAX Mejoras del IDE - sólo compile time
+$(DELPHI)\Bin\dclite50.bpl=Borland Integrated Translation Environment
+[HistoryLists\hlUnitAliases]
+Count=1
+Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
