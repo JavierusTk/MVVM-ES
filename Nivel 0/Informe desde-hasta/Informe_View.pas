@@ -3,11 +3,10 @@ unit Informe_View;
 interface
 
 uses
-  Windows, Variants, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, Buttons, ComCtrls,
+  Classes, Controls, Forms, StdCtrls, ExtCtrls, Buttons, ComCtrls,
 //  EsperePorFavor,
   Informe_ViewModel,
-  Informe_ViewModel_Implementation;
+  Informe_ViewModel_Implementation, Graphics;
 
 type
   TfmInforme_View = class(TForm)
@@ -46,8 +45,6 @@ procedure Informe(const aDesdeFecha,aHastaFecha:TDateTime;const aNombrePlantilla
 
 
 implementation
-
-
 
 
 {$R *.DFM}
@@ -121,7 +118,8 @@ end;
 
 procedure TfmInforme_View.FormDestroy(Sender: TObject);
 begin
-  FreeAndNil(fViewModel);
+  fViewModel.Free;
+  fViewModel:=nil;
 end;
 
 procedure TfmInforme_View.TickInforme(Sender: TObject);
