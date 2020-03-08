@@ -57,6 +57,9 @@
 *.tvsconfig
 *.dsk
 
+# Datamodule related stuff I don't on the repository
+*.dti
+
 # Delphi history and backups
 __history/
 __recovery/
