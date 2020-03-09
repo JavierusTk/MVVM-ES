@@ -34,7 +34,7 @@ type
     fViewModel: TInforme_ViewModel;
     ViewModel: TInforme_ViewModel;
     procedure CambiosEnViewModel(Sender:TObject);
-    procedure RevisarDatos;
+    procedure ActualizarInterface;
     procedure TickInforme(Sender:TObject);
   end;
 
@@ -89,7 +89,7 @@ begin
   RevisarDatos;
 end;
 
-procedure TfmInforme_View.RevisarDatos;
+procedure TfmInforme_View.ActualizarInterface;
 begin
   ViewModel.Actualizar(edtDesdeFecha.Date,edtHastaFecha.Date);
   btnOk.Enabled:=ViewModel.EmitirInformeOK;

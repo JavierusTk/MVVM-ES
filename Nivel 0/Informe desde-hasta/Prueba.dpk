@@ -26,8 +26,7 @@ package Prueba;
 {$IMPLICITBUILD OFF}
 
 requires
-  vcl50,
-  MenuControlPackage;
+  vcl50;
 
 contains
   Informe_View in 'Informe_View.pas' {fmInforme_View},
