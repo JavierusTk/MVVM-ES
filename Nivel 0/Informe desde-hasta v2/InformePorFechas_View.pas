@@ -16,7 +16,7 @@ type
     dtpDesdeFecha: TDateTimePicker;
     dtpHastaFecha: TDateTimePicker;
   protected
-    function ClaseInforme:TInforme_ViewModel_Class; override; 
+    function ClaseInforme:TInforme_ViewModel_Class; override;
     procedure ActualizarInterface; override;
     procedure CambiosEnView; override;
   end;
@@ -29,23 +29,33 @@ implementation
 uses
   InformePorFechas_ViewModel_implementation;
 
-procedure TfmInformePorFechas_View.ActualizarInterface;
-begin
-  dtpDesdeFecha.Date:=(ViewModel as TInformePorFechas_ViewModel).DesdeFecha;
-  dtpHastaFecha.Date:=(ViewModel as TInformePorFechas_ViewModel).HastaFecha;
-  inherited;
-end;
-
-procedure TfmInformePorFechas_View.CambiosEnView;
-begin
-  (ViewModel as TInformePorFechas_ViewModel).DesdeFecha:=dtpDesdeFecha.Date;
-  (ViewModel as TInformePorFechas_ViewModel).HastaFecha:=dtpHastaFecha.Date;
-  inherited;
-end;
-
+  
 function TfmInformePorFechas_View.ClaseInforme: TInforme_ViewModel_Class;
 begin
   result:=TInformePorFechas_ViewModel;
 end;
+
+procedure TfmInformePorFechas_View.ActualizarInterface;
+var
+  VM: TInformePorFechas_ViewModel;
+begin
+  inherited;
+  VM:=(ViewModel as TInformePorFechas_ViewModel);
+  //VM->UI: Asignar las propiedades de VM a los elementos del Interfaz de Usuario
+  dtpDesdeFecha.Date:=VM.DesdeFecha;
+  dtpHastaFecha.Date:=VM.HastaFecha;
+end;
+
+procedure TfmInformePorFechas_View.CambiosEnView;
+var
+  VM: TInformePorFechas_ViewModel;
+begin
+  inherited;
+  VM:=(ViewModel as TInformePorFechas_ViewModel);
+  //UI->VM: Asignar los datos de los elementos del UI a las propiedades del VM
+  VM.DesdeFecha:=dtpDesdeFecha.Date;
+  VM.HastaFecha:=dtpHastaFecha.Date;
+end;
+
 
 end.
