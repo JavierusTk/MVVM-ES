@@ -4,23 +4,31 @@ interface
 
 uses
   Informe_ViewModel_Implementation,
-  Classes, Controls, Forms, StdCtrls, ExtCtrls, Buttons, ComCtrls, Graphics;
+  {$IFDEF PRUEBAS}
+  Buttons, ComCtrls, Graphics,
+  {$ELSE}
+  SysUtils, EsperePorFavor,
+  FormMax, StdCtrlsMax, PanelMax, Boxes, ccOkCancelPanel, StdCtrls,
+  Controls, ExtCtrls, Classes
+  {$ENDIF}
+  Classes, Controls, Forms, StdCtrls, ExtCtrls;
 
 type
-  TfmInforme_View = class(TForm)
+//  TfmInforme_View = class(TForm)
+  TfmInforme_View = class(TFormMax)
     pnlGeneral: TPanel;
     Bevel2: TBevel;
     pnlOkCancel: TPanel;
-    imgOK_CC_OkCancelPanel: TImage;
-    imgCancel_CC_OkCancelPanel: TImage;
     btnOk: TBitBtn;
     btnCancel: TBitBtn;
-    procedure btnCancelClick(Sender: TObject);
-    procedure btnOkClick(Sender: TObject);
+    procedure OkClicked(Sender: TObject);
     procedure evtCambiosEnView(Sender: TObject); virtual;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDestroy(Sender: TObject);
   private
+  {$IFNDEF PRUEBAS}
+    FormEspera: TfmEsperePorFavor;
+  {$ENDIF}
     fViewModel: TInforme_ViewModel;
     procedure CambiosEnViewModel(Sender:TObject);
   protected
@@ -43,11 +51,20 @@ implementation
 
 {$R *.DFM}
 
+{$IFNDEF PRUEBAS}
+uses
+  DialogsMAX;
+{$ENDIF}
+
 class procedure TfmInforme_View.EmitirInforme(const InjectedViewModel:TInforme_ViewModel=nil);
 var
   aView: TfmInforme_View;
 begin
+  {$IFDEF PRUEBAS}
   Application.CreateForm(Self, aView);
+  {$ELSE}
+  AppCreateForm(Self, aView);
+  {$ENDIF}
   try
     if Assigned(InjectedViewModel) then
       aView.fViewModel:=InjectedViewModel
@@ -56,37 +73,59 @@ begin
     aView.ViewModel.Iniciar(aView.CambiosEnViewModel);
     aView.ViewModel.TickInforme:=aView.TickInforme;
     aView.ActualizarInterface;
+    {$IFDEF PRUEBAS}
     aView.ShowModal;
+    {$ELSE}
+    ShowFormCyberMax(aView,True);
+    {$ENDIF}
   except
     aView.Release;
   end
 end;
 
-
-procedure TfmInforme_View.btnOkClick(Sender: TObject);
+procedure TfmInforme_View.CambiosEnView;
 begin
-  if ViewModel.EmitirInformeOK then begin
+  //Asignar datos de View a ViewModel
+end;
+
+function TfmInforme_View.ClaseInforme: TInforme_ViewModel_Class;
+begin
+  result:=TInforme_ViewModel;
+end;
+
+
+
+procedure TfmInforme_View.OkClicked(Sender: TObject);
+begin
+  {$IFDEF PRUEBAS}
+    if ViewModel.EmitirInformeOK then
+      ViewModel.EmitirInforme;
+    ModalResult:=mrOK;
+  {$ELSE}
+  FormEspera:=EsperaComenzarCreate('Calculando Informe...');
+  try
+    FormEspera.AbortableRepetible;
+    FormEspera.MostrarModal;
     ViewModel.EmitirInforme;
+  finally
+    FormEspera.Terminar;
   end;
-  ModalResult:=mrOK;
+  if PreguntaSN('¿ Desea emitir otro Informe ?') then
+    OkCancelPanel.RemoveModalResult
+  else
+    ModalResult:=mrOk
+  {$ENDIF}
 end;
 
-
-procedure TfmInforme_View.evtCambiosEnView(Sender: TObject);
-begin
-  CambiosEnView;
-end;
 
 procedure TfmInforme_View.ActualizarInterface;
 begin
+  {$IFDEF PRUEBAS}
   btnOk.Enabled:=ViewModel.EmitirInformeOK;
+  {$ELSE}
+  OkCancelPanel.OkEnabled:=ViewModel.EmitirInformeOK;
+  {$ENDIF}
 end;
-
-procedure TfmInforme_View.btnCancelClick(Sender: TObject);
-begin
-  Close;
-end;
-
 
 procedure TfmInforme_View.FormClose(Sender: TObject;var Action: TCloseAction);
 begin
@@ -99,14 +138,11 @@ begin
 end;
 
 
-procedure TfmInforme_View.CambiosEnView;
+procedure TfmInforme_View.TickInforme(Sender: TObject);
 begin
-  //Asignar datos de View a ViewModel
-end;
-
-function TfmInforme_View.ClaseInforme: TInforme_ViewModel_Class;
-begin
-  result:=TInforme_ViewModel;
+  {$IFNDEF PRUEBAS} 
+  FormEspera.Avanzar;
+  {$ENDIF} 
 end;
 
 procedure TfmInforme_View.FormDestroy(Sender: TObject);
@@ -117,12 +153,11 @@ begin
   end;
 end;
 
-procedure TfmInforme_View.TickInforme(Sender: TObject);
+
+procedure TfmInforme_View.evtCambiosEnView(Sender: TObject);
 begin
-//  FormEspera.Avanzar;
+  CambiosEnView;
 end;
-
-
 
 end.
 

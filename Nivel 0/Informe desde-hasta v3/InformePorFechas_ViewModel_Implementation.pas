@@ -3,16 +3,17 @@ unit InformePorFechas_ViewModel_Implementation;
 interface
 
 uses
-  Informe_Model,Informe_ViewModel_Implementation;
+  Informe_Model, Informe_ViewModel_Implementation;
 
 type
   TInformePorFechas_ViewModel = class(TInforme_ViewModel)
   private
-    { Private declarations }
     fDesdeFecha: TDateTime;
     fHastaFecha: TDateTime;
     procedure SetDesdeFecha(const Value: TDateTime);
     procedure SetHastaFecha(const Value: TDateTime);
+    function  GetDesdeFecha: TDateTime;
+    function  GetHastaFecha: TDateTime;
   protected
     function  GetEmitirInformeOK: boolean; override;
     function  ModelClass:TdmInforme_Model_Class; override;
@@ -20,8 +21,8 @@ type
     procedure AsignacionesIniciales; override;
   public
     procedure Actualizar; virtual;
-    property  DesdeFecha:TDateTime read fDesdeFecha write SetDesdeFecha;
-    property  HastaFecha:TDateTime read fHastaFecha write SetHastaFecha;
+    property  DesdeFecha:TDateTime read GetDesdeFecha write SetDesdeFecha;
+    property  HastaFecha:TDateTime read GetHastaFecha write SetHastaFecha;
   end;
 
 
@@ -31,11 +32,6 @@ uses
   InformePorFechas_Model,
   SysUtils;
 
-
-procedure TInformePorFechas_ViewModel.Actualizar;
-begin
-  inherited;
-end;
 
 procedure TInformePorFechas_ViewModel.AsignacionesIniciales;
 begin
@@ -54,9 +50,14 @@ begin
   M.HastaFecha:=HastaFecha;
 end;
 
+procedure TInformePorFechas_ViewModel.Actualizar;
+begin
+  inherited;
+end;
+
 function TInformePorFechas_ViewModel.GetEmitirInformeOK: boolean;
 begin
-  result:=(DesdeFecha<=HastaFecha)
+  result:=(DesdeFecha<>0) and (DesdeFecha<=HastaFecha)
           and inherited GetEmitirInformeOK;
 end;
 
@@ -80,6 +81,16 @@ begin
     fHastaFecha:=Value;
     CambioPropiedades;
   end;
+end;
+
+function TInformePorFechas_ViewModel.GetDesdeFecha: TDateTime;
+begin
+  result:=fDesdeFecha;
+end;
+
+function TInformePorFechas_ViewModel.GetHastaFecha: TDateTime;
+begin
+  result:=fHastaFecha;
 end;
 
 end.

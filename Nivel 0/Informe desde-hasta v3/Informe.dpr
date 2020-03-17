@@ -13,7 +13,6 @@ uses
 
 begin
   Application.Initialize;
-  Application.MainFormOnTaskbar := True;
   TfmInformePorFechas_View.EmitirInforme;
   Application.Run;
 end.

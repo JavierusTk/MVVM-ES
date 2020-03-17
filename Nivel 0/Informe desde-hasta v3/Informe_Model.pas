@@ -3,6 +3,11 @@ unit Informe_Model;
 interface
 
 uses
+{$IFDEF PRUEBAS}
+  {$IFDEF VER130}
+  Forms,
+  {$ENDIF}
+{$ENDIF}
   Classes;
 
 type
@@ -14,7 +19,7 @@ type
     fTickInforme: TmvvmNotifyEvent;
   protected
     procedure Tick;
-    procedure EmitirResultado;  virtual; //abstract;
+    procedure EmitirResultado;  virtual; {$IFNDEF PRUEBAS} abstract;  {$ENDIF}
   public
     class function CreateModel:TdmInforme_Model;
     procedure EmitirInforme(const aTickInforme:TmvvmNotifyEvent);
@@ -29,8 +34,14 @@ implementation
 {$R *.DFM}
 
 uses
-  Dialogs,
-  Forms;
+{$IFDEF PRUEBAS}
+  {$IFNDEF VER130}
+  Forms,
+  {$ENDIF}
+  Dialogs;
+{$ELSE}
+  FormMax;
+{$ENDIF}
 
 procedure TdmInforme_Model.EmitirInforme(const aTickInforme:TmvvmNotifyEvent);
 begin
@@ -40,17 +51,19 @@ end;
 
 class function TdmInforme_Model.CreateModel:TdmInforme_Model;
 begin
-{$IFDEF MAX}
-  AppCreateDatamodule(Self,result);
-{$ELSE}
+{$IFDEF PRUEBAS}
   Application.CreateForm(Self,result)
+{$ELSE}
+  AppCreateDatamodule(Self,result);
 {$ENDIF}
 end;
 
+{$IFDEF PRUEBAS}
 procedure TdmInforme_Model.EmitirResultado;
 begin
   ShowMessage('RESULTADO');
 end;
+{$ENDIF}
 
 procedure TdmInforme_Model.Tick;
 begin
