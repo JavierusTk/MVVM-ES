@@ -14,8 +14,8 @@ uses
   Classes, Controls, Forms, StdCtrls, ExtCtrls;
 
 type
-//  TfmInforme_View = class(TForm)
-  TfmInforme_View = class(TFormMax)
+  TfmInforme_View = class(TForm)
+//  TfmInforme_View = class(TFormMax)
     pnlGeneral: TPanel;
     Bevel2: TBevel;
     pnlOkCancel: TPanel;
